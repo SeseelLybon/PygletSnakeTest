@@ -13,17 +13,21 @@ class KeyObservable:
         for observer in self.__observers:
             observer.on_key_press(self, *args, **kwargs)
 
+            
+keySubject = KeyObservable()
+
+
 class KeyObserver:
-    def __init__(self, observable):
-        observable.register_observer(self)
+    keySubject = keySubject
+    def __init__(self):
+        keySubject.register_observer(self)
     
     def on_key_press(self, observable, *args, **kwargs):
         print('Got', args, kwargs, 'From', observable)
         
-keySubject = KeyObservable()
-
+        
 
 if "__name__" == "__main__":
-    subject = Observable()
-    observer = Observer(subject)
+    subject = KeyObservable()
+    observer = KeyObserver(subject)
     subject.notify_observers('test')

@@ -4,10 +4,9 @@ from pyglet.window import key
 import pyglet
 
 from ObserverClasses import KeyObserver
-from ObserverClasses import keySubject
+from Collision import Collider
 
-
-class Snake(KeyObserver):
+class Snake(KeyObserver, Collider):
     
     resources_folder = "Resources/"
     movespeed = 50 # pixels
@@ -15,7 +14,8 @@ class Snake(KeyObserver):
 
     def __init__(self, startpos : tuple ):
         
-        super().__init__(keySubject)
+        KeyObserver.__init__(self)
+        Collider.__init__(self)
         self.snakehead = pyglet.sprite.Sprite(self.ball_image, x=startpos[0], y=startpos[1] )
         self.snakebody = []
         self.appendSnakeSegment()
@@ -23,9 +23,12 @@ class Snake(KeyObserver):
         self.appendSnakeSegment()
         self.appendSnakeSegment()
 
+    def position(self):
+        return (self.snakehead.x ,self.snakehead.y)
+
     def appendSnakeSegment(self):
         if len(self.snakebody) == 0:
-            self.snakebody.append(pyglet.sprite.Sprite(self.ball_image,
+            self.snakebody.append( pyglet.sprite.Sprite(self.ball_image,
                                                        x=self.snakehead.x,
                                                        y=self.snakehead.y ))
         else:
@@ -61,14 +64,16 @@ class Snake(KeyObserver):
 
         elif symbol == key.D:
             move[0] += self.movespeed
-
-        self.move_body(move)
+        if not self.collisionmanager.check_collision(self, tuple(move)):
+            self.move_body(move)
 
     def draw():
         return [self.snakehead, self.snakebody]
 
-class SnakeSegement():
-    def __init__():
-        pass
+class SnakeSegement(Collider):
+
+    def __init__(self, sprite):
+        self.segment = sprite
+        Collider.__init__(self)
 
 
