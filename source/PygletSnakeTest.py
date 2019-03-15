@@ -14,7 +14,7 @@ resources_folder = "Resources/"
 print("Booting...")
 print("Root... ", __file__ )
 
-fps_display = pyglet.clock.ClockDisplay()
+#fps_display = pyglet.clock.ClockDisplay()
 window = pyglet.window.Window()
 
 
@@ -31,12 +31,12 @@ label = pyglet.text.Label('Hello, world',
 
 @window.event
 def on_draw():
-    sprites = list()
+    #sprites = list()
     window.clear()
-    fps_display.draw()
+    #fps_display.draw()
     mainsnake.snakehead.draw()
     for i in mainsnake.snakebody:
-        i.draw()
+        i.draw().draw()
 
 
 @window.event

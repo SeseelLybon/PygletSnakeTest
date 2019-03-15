@@ -18,32 +18,32 @@ class Snake(KeyObserver, Collider):
         Collider.__init__(self)
         self.snakehead = pyglet.sprite.Sprite(self.ball_image, x=startpos[0], y=startpos[1] )
         self.snakebody = []
+        
         self.appendSnakeSegment()
         self.appendSnakeSegment()
         self.appendSnakeSegment()
         self.appendSnakeSegment()
+
 
     def position(self):
-        return (self.snakehead.x ,self.snakehead.y)
+        return self.snakehead.x ,self.snakehead.y
 
     def appendSnakeSegment(self):
-        if len(self.snakebody) == 0:
-            self.snakebody.append( pyglet.sprite.Sprite(self.ball_image,
-                                                       x=self.snakehead.x,
-                                                       y=self.snakehead.y ))
-        else:
-            self.snakebody.append(pyglet.sprite.Sprite(self.ball_image,
-                                                       x=self.snakebody[-1].x,
-                                                       y=self.snakebody[-1].y ))
+        self.snakebody.append( SnakeSegement(
+                                pyglet.sprite.Sprite(self.ball_image, x=self.snakehead.x, y=self.snakehead.y
+                             )))
 
     def move_body(self, move : list ):
-        prevpos = [ self.snakehead.x, self.snakehead.y ];
+        prevpos = [ self.snakehead.x, self.snakehead.y ]
         self.snakehead.update(x=move[0]+self.snakehead.x,
                               y=move[1]+self.snakehead.y)
-        temppos = [ int(), int() ];
+        #temppos = [ int(), int() ]
+        print("snakehead", self.snakehead.x, self.snakehead.y)
         for segment in self.snakebody:
+            segment = segment.segment
             temppos = [ segment.x, segment.y ]
-            segment.x, segment.y = prevpos[0], prevpos[1]
+            segment.update( prevpos[0], prevpos[1])
+            print("segment", segment.x, segment.y)
             prevpos = temppos
 
 
@@ -67,13 +67,16 @@ class Snake(KeyObserver, Collider):
         if not self.collisionmanager.check_collision(self, tuple(move)):
             self.move_body(move)
 
-    def draw():
-        return [self.snakehead, self.snakebody]
+    def draw(self):
+        return [self.snakehead, self.snakebody ]
 
 class SnakeSegement(Collider):
 
     def __init__(self, sprite):
         self.segment = sprite
         Collider.__init__(self)
+
+    def draw(self):
+        return self.segment
 
 
