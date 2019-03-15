@@ -7,9 +7,9 @@ from ObserverClasses import KeyObserver
 from Collision import Collider
 
 class Snake(KeyObserver, Collider):
-    
-    resources_folder = "Resources/"
+
     movespeed = 50 # pixels
+    resources_folder = "Resources/"
     ball_image = pyglet.resource.image(resources_folder+'ball.png')
 
     def __init__(self, startpos : tuple ):
@@ -18,12 +18,9 @@ class Snake(KeyObserver, Collider):
         Collider.__init__(self)
         self.snakehead = pyglet.sprite.Sprite(self.ball_image, x=startpos[0], y=startpos[1] )
         self.snakebody = []
-        
-        self.appendSnakeSegment()
-        self.appendSnakeSegment()
-        self.appendSnakeSegment()
-        self.appendSnakeSegment()
 
+        for dummy in range(0,5):
+            self.appendSnakeSegment()
 
     def position(self):
         return self.snakehead.x ,self.snakehead.y
@@ -38,12 +35,10 @@ class Snake(KeyObserver, Collider):
         self.snakehead.update(x=move[0]+self.snakehead.x,
                               y=move[1]+self.snakehead.y)
         #temppos = [ int(), int() ]
-        print("snakehead", self.snakehead.x, self.snakehead.y)
         for segment in self.snakebody:
             segment = segment.segment
             temppos = [ segment.x, segment.y ]
             segment.update( prevpos[0], prevpos[1])
-            print("segment", segment.x, segment.y)
             prevpos = temppos
 
 
@@ -64,11 +59,13 @@ class Snake(KeyObserver, Collider):
 
         elif symbol == key.D:
             move[0] += self.movespeed
+
         if not self.collisionmanager.check_collision(self, tuple(move)):
             self.move_body(move)
 
     def draw(self):
         return [self.snakehead, self.snakebody ]
+
 
 class SnakeSegement(Collider):
 
@@ -79,4 +76,6 @@ class SnakeSegement(Collider):
     def draw(self):
         return self.segment
 
+    def position(self):
+        return self.segment.x ,self.segment.y
 

@@ -7,6 +7,8 @@ from ObserverClasses import keySubject
 
 from SnakeClass import Snake
 
+from Wall import WallSegment
+
 
 #resources_folder = "Resources\\"
 resources_folder = "Resources/"
@@ -19,6 +21,11 @@ window = pyglet.window.Window()
 
 
 mainsnake = Snake((200,200))
+wall_list = list()
+wall_list.append( WallSegment((50,50)) )
+wall_list.append( WallSegment((50,100)) )
+wall_list.append( WallSegment((50,150)) )
+wall_list.append( WallSegment((50,200)) )
 
 
 
@@ -36,6 +43,8 @@ def on_draw():
     #fps_display.draw()
     mainsnake.snakehead.draw()
     for i in mainsnake.snakebody:
+        i.draw().draw()
+    for i in wall_list:
         i.draw().draw()
 
 
