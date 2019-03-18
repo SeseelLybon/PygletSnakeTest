@@ -5,6 +5,7 @@ import pyglet
 
 from ObserverClasses import KeyObserver
 from Collision import Collider
+from apple import Apple
 
 class Snake(KeyObserver, Collider):
 
@@ -19,7 +20,7 @@ class Snake(KeyObserver, Collider):
         self.snakehead = pyglet.sprite.Sprite(self.ball_image, x=startpos[0], y=startpos[1] )
         self.snakebody = []
 
-        for dummy in range(0,5):
+        for dummy in range(0,3):
             self.appendSnakeSegment()
 
     def position(self):
@@ -59,8 +60,14 @@ class Snake(KeyObserver, Collider):
 
         elif symbol == key.D:
             move[0] += self.movespeed
+        collisions = self.collisionmanager.check_collision(self, tuple(move))
 
-        if not self.collisionmanager.check_collision(self, tuple(move)):
+        for i in collisions:
+            if isinstance(i, Apple):
+                i.eat()
+                self.move_body(move)
+                self.appendSnakeSegment()
+        if not collisions:
             self.move_body(move)
 
     def draw(self):

@@ -6,8 +6,8 @@ from pyglet.window import mouse
 from ObserverClasses import keySubject
 
 from SnakeClass import Snake
-
-from Wall import WallSegment
+from apple import Apple
+from wall import WallSegment
 
 
 #resources_folder = "Resources\\"
@@ -27,6 +27,8 @@ wall_list.append( WallSegment((50,100)) )
 wall_list.append( WallSegment((50,150)) )
 wall_list.append( WallSegment((50,200)) )
 
+apple = Apple((300,300))
+
 
 
 label = pyglet.text.Label('Hello, world',
@@ -41,6 +43,7 @@ def on_draw():
     #sprites = list()
     window.clear()
     #fps_display.draw()
+    apple.draw().draw()
     mainsnake.snakehead.draw()
     for i in mainsnake.snakebody:
         i.draw().draw()

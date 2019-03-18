@@ -13,7 +13,8 @@ class CollisionManager:
                                      thing.position()[1] + offset[1]):
                 if collider != thing:
                     collisions.append(collider)
-        print(collisions)
+        if collisions:
+            print(thing, "triggered collisions", "\n\t", collisions)
         return collisions
                 
 collisionmanager = CollisionManager()

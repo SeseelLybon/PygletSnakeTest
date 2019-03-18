@@ -5,7 +5,7 @@ import pyglet
 class WallSegment(Collider):
 
     resources_folder = "Resources/"
-    ball_image = pyglet.resource.image(resources_folder+'ball.png')
+    ball_image = pyglet.resource.image(resources_folder+'wall.png')
 
     def __init__(self, pos):
         Collider.__init__(self)
