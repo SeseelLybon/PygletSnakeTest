@@ -25,9 +25,3 @@ class KeyObserver:
     def on_key_press(self, observable, *args, **kwargs):
         print('Got', args, kwargs, 'From', observable)
         
-        
-
-if "__name__" == "__main__":
-    subject = KeyObservable()
-    observer = KeyObserver(subject)
-    subject.notify_observers('test')

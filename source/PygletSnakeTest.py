@@ -44,11 +44,11 @@ def on_draw():
     window.clear()
     #fps_display.draw()
     apple.draw().draw()
-    mainsnake.snakehead.draw()
     for i in mainsnake.snakebody:
         i.draw().draw()
     for i in wall_list:
         i.draw().draw()
+    mainsnake.snakehead.draw()
 
 
 @window.event

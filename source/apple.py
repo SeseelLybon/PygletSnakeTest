@@ -1,5 +1,6 @@
 
 from Collision import Collider
+from Collision import collisionmanager
 import pyglet
 
 from random import randint
@@ -20,10 +21,11 @@ class Apple(Collider):
         return self.apple_sprite.x,self.apple_sprite.y
 
     def eat(self):
+        self.apple_sprite.update(x=0,y=0)
         while True:
             x=(randint(100,600)//50)*50
             y=(randint(100,500)//50)*50
-            collisions = self.collisionmanager.check_collision(self, (x,y) )
+            collisions = collisionmanager.check_collision(self, (x,y) )
             if not collisions:
                 break
 

@@ -16,14 +16,23 @@ class CollisionManager:
         if collisions:
             print(thing, "triggered collisions", "\n\t", collisions)
         return collisions
-                
+
+    def unregister_observer(self, observer):
+        if observer in self._colliders:
+            self._colliders.pop(collisionmanager._colliders.index(observer))
+        pass
+
 collisionmanager = CollisionManager()
             
 class Collider:
-    collisionmanager = collisionmanager
+    #collisionmanager = collisionmanager
 
     def __init__(self):
         collisionmanager.register_observer(self)
+
+    def __del__(self):
+        collisionmanager.unregister_observer(self)
+        print("called collision destructor")
 
     def on_collision(self, *args, **kwargs):
         print('Got', args, kwargs, 'From', collisionmanager)

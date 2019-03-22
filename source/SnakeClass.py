@@ -5,19 +5,31 @@ import pyglet
 
 from ObserverClasses import KeyObserver
 from Collision import Collider
+from Collision import collisionmanager
 from apple import Apple
 
 class Snake(KeyObserver, Collider):
 
     movespeed = 50 # pixels
     resources_folder = "Resources/"
-    ball_image = pyglet.resource.image(resources_folder+'ball.png')
+
+    snakehead_left_image = pyglet.resource.image(resources_folder+'snakehead_left.png')
+    snakehead_right_image = pyglet.resource.image(resources_folder+'snakehead_right.png')
+    snakehead_up_image = pyglet.resource.image(resources_folder+'snakehead_up.png')
+    snakehead_down_image = pyglet.resource.image(resources_folder+'snakehead_down.png')
+
+    snakebody_rl_image = pyglet.resource.image(resources_folder+'snakebody_rl.png')
+    snakebody_ud_image = pyglet.resource.image(resources_folder+'snakebody_ud.png')
+    snakebody_ld_image = pyglet.resource.image(resources_folder+'snakebody_ld.png')
+    snakebody_rd_image = pyglet.resource.image(resources_folder+'snakebody_rd.png')
+    snakebody_lu_image = pyglet.resource.image(resources_folder+'snakebody_lu.png')
+    snakebody_ru_image = pyglet.resource.image(resources_folder+'snakebody_rd.png')
 
     def __init__(self, startpos : tuple ):
         
         KeyObserver.__init__(self)
         Collider.__init__(self)
-        self.snakehead = pyglet.sprite.Sprite(self.ball_image, x=startpos[0], y=startpos[1] )
+        self.snakehead = pyglet.sprite.Sprite(self.snakehead_left_image, x=startpos[0], y=startpos[1] )
         self.snakebody = []
 
         for dummy in range(0,3):
@@ -28,19 +40,58 @@ class Snake(KeyObserver, Collider):
 
     def appendSnakeSegment(self):
         self.snakebody.append( SnakeSegement(
-                                pyglet.sprite.Sprite(self.ball_image, x=self.snakehead.x, y=self.snakehead.y
-                             )))
+                                pyglet.sprite.Sprite(self.snakebody_rl_image, x=self.snakehead.x, y=self.snakehead.y),
+                                len(self.snakebody)
+                             ))
 
     def move_body(self, move : list ):
         prevpos = [ self.snakehead.x, self.snakehead.y ]
         self.snakehead.update(x=move[0]+self.snakehead.x,
                               y=move[1]+self.snakehead.y)
+
+        if move[0] > 0:
+            self.snakehead.image = self.snakehead_right_image
+        elif move[0] < 0:
+            self.snakehead.image = self.snakehead_left_image
+        elif move[1] > 0:
+            self.snakehead.image = self.snakehead_up_image
+        elif move[1] < 0:
+            self.snakehead.image = self.snakehead_down_image
+
+
+        previmage=None
+        doonce = True
         #temppos = [ int(), int() ]
         for segment in self.snakebody:
             segment = segment.segment
             temppos = [ segment.x, segment.y ]
+            tempimage = segment.image
             segment.update( prevpos[0], prevpos[1])
+
+            if doonce:
+                if move[0] > 0:
+                    if prevmove[0] > 0:
+                        segment.image =
+                    elif prevmove[0] < 0:
+                        pass
+                    else:
+                        segment.image = self.snakebody_rl_image
+                elif move[1] != 0:
+                    if prevmove[1] > 0:
+                        pass
+                    elif prevmove[1] < 0:
+                        pass
+                    else:
+                        segment.image = self.snakebody_ud_image
+
+                doonce = False
+            else:
+                segment.image = previmage
+
+            prevmove = move
+
             prevpos = temppos
+            previmage = tempimage
 
 
     def on_key_press(self, observable, *args, **kwargs):
@@ -60,25 +111,48 @@ class Snake(KeyObserver, Collider):
 
         elif symbol == key.D:
             move[0] += self.movespeed
-        collisions = self.collisionmanager.check_collision(self, tuple(move))
+        collisions = collisionmanager.check_collision(self, tuple(move))
 
         for i in collisions:
             if isinstance(i, Apple):
                 i.eat()
                 self.move_body(move)
                 self.appendSnakeSegment()
+            elif isinstance(i, SnakeSegement):
+                temp = self.snakebody
+                print([x.ID for x in self.snakebody])
+                for seg in temp[:]:
+                    if seg.ID > i.ID:
+                        print("Deleting segment", seg.ID, "hit by", i.ID)
+                        pos = self.snakebody.index(seg)
+                        self.snakebody[pos].__del__()
+                        self.snakebody.pop(pos)
+
+
+                self.move_body(move)
+
         if not collisions:
             self.move_body(move)
 
     def draw(self):
         return [self.snakehead, self.snakebody ]
 
+    def bite_self(self):
+        pass
 
 class SnakeSegement(Collider):
 
-    def __init__(self, sprite):
+    num_segments = [0]
+
+    def __init__(self, sprite, ssid):
         self.segment = sprite
+        self.ID = ssid
+        print("Created snakesegment with id", self.ID)
         Collider.__init__(self)
+
+    def __del__(self):
+        print("SnakeSegment del called")
+        collisionmanager.unregister_observer(self)
 
     def draw(self):
         return self.segment
