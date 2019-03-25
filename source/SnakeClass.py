@@ -18,12 +18,13 @@ class Snake(KeyObserver, Collider):
     snakehead_up_image = pyglet.resource.image(resources_folder+'snakehead_up.png')
     snakehead_down_image = pyglet.resource.image(resources_folder+'snakehead_down.png')
 
-    snakebody_rl_image = pyglet.resource.image(resources_folder+'snakebody_rl.png')
+    snakebody_blanco_image = pyglet.resource.image(resources_folder+'snakebody_blanco.png')
+    snakebody_lr_image = pyglet.resource.image(resources_folder+'snakebody_rl.png')
     snakebody_ud_image = pyglet.resource.image(resources_folder+'snakebody_ud.png')
     snakebody_ld_image = pyglet.resource.image(resources_folder+'snakebody_ld.png')
     snakebody_rd_image = pyglet.resource.image(resources_folder+'snakebody_rd.png')
     snakebody_lu_image = pyglet.resource.image(resources_folder+'snakebody_lu.png')
-    snakebody_ru_image = pyglet.resource.image(resources_folder+'snakebody_rd.png')
+    snakebody_ru_image = pyglet.resource.image(resources_folder+'snakebody_ru.png')
 
     def __init__(self, startpos : tuple ):
         
@@ -40,9 +41,11 @@ class Snake(KeyObserver, Collider):
 
     def appendSnakeSegment(self):
         self.snakebody.append( SnakeSegement(
-                                pyglet.sprite.Sprite(self.snakebody_rl_image, x=self.snakehead.x, y=self.snakehead.y),
+                                pyglet.sprite.Sprite(self.snakebody_blanco_image, x=self.snakehead.x, y=self.snakehead.y),
                                 len(self.snakebody)
                              ))
+
+    prevmovebody = [0, 0]
 
     def move_body(self, move : list ):
         prevpos = [ self.snakehead.x, self.snakehead.y ]
@@ -70,17 +73,31 @@ class Snake(KeyObserver, Collider):
 
             if doonce:
                 if move[0] > 0:
-                    if prevmove[0] > 0:
-                        segment.image =
-                    elif prevmove[0] < 0:
-                        pass
+                    if self.prevmovebody[1] > 0:
+                        segment.image = self.snakebody_ld_image
+                    elif self.prevmovebody[1] < 0:
+                        segment.image = self.snakebody_lu_image
                     else:
-                        segment.image = self.snakebody_rl_image
-                elif move[1] != 0:
-                    if prevmove[1] > 0:
-                        pass
-                    elif prevmove[1] < 0:
-                        pass
+                        segment.image = self.snakebody_lr_image
+                elif move[0] < 0:
+                    if self.prevmovebody[1] > 0:
+                        segment.image = self.snakebody_rd_image
+                    elif self.prevmovebody[1] < 0:
+                        segment.image = self.snakebody_ru_image
+                    else:
+                        segment.image = self.snakebody_lr_image
+                if move[1] > 0:
+                    if self.prevmovebody[0] > 0:
+                        segment.image = self.snakebody_ru_image
+                    elif self.prevmovebody[0] < 0:
+                        segment.image = self.snakebody_lu_image
+                    else:
+                        segment.image = self.snakebody_ud_image
+                elif move[1] < 0:
+                    if self.prevmovebody[0] > 0:
+                        segment.image = self.snakebody_rd_image
+                    elif self.prevmovebody[0] < 0:
+                        segment.image = self.snakebody_ld_image
                     else:
                         segment.image = self.snakebody_ud_image
 
@@ -88,7 +105,7 @@ class Snake(KeyObserver, Collider):
             else:
                 segment.image = previmage
 
-            prevmove = move
+            self.prevmovebody = move
 
             prevpos = temppos
             previmage = tempimage
