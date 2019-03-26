@@ -5,6 +5,8 @@ from pyglet.window import mouse
 
 from ObserverClasses import keySubject
 
+from random import randint
+
 from SnakeClass import Snake
 from apple import Apple
 from wall import WallSegment
@@ -22,10 +24,25 @@ window = pyglet.window.Window()
 
 mainsnake = Snake((200,200))
 wall_list = list()
-wall_list.append( WallSegment((50,50)) )
-wall_list.append( WallSegment((50,100)) )
-wall_list.append( WallSegment((50,150)) )
-wall_list.append( WallSegment((50,200)) )
+for i in range(0,13):
+    i = i*50
+    wall_list.append( WallSegment((i,0)) )
+    wall_list.append( WallSegment((i,9*50)) )
+
+for i in range(1,9):
+    i = i*50
+    wall_list.append( WallSegment((0,i)) )
+    wall_list.append( WallSegment((12*50,i)) )
+
+# Add randomly placed walls to make the game more difficult
+# Field size is 11 by 8
+
+for dummy in range(0, 8):
+
+    x = (randint(1,11))*50
+    y = (randint(1,8))*50
+
+    wall_list.append( WallSegment((x,y)) )
 
 apple = Apple((300,300))
 

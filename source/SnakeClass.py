@@ -128,12 +128,13 @@ class Snake(KeyObserver, Collider):
 
         elif symbol == key.D:
             move[0] += self.movespeed
+
         collisions = collisionmanager.check_collision(self, tuple(move))
 
         for i in collisions:
             if isinstance(i, Apple):
-                i.eat()
                 self.move_body(move)
+                i.eat()
                 self.appendSnakeSegment()
             elif isinstance(i, SnakeSegement):
                 temp = self.snakebody

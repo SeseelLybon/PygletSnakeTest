@@ -23,9 +23,11 @@ class Apple(Collider):
     def eat(self):
         self.apple_sprite.update(x=0,y=0)
         while True:
-            x=(randint(100,600)//50)*50
-            y=(randint(100,500)//50)*50
+            x=(randint(1,11))*50
+            y=(randint(1,8))*50
+            print("Trying position", x, y)
             collisions = collisionmanager.check_collision(self, (x,y) )
+
             if not collisions:
                 break
 

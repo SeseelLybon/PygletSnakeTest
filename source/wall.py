@@ -16,3 +16,7 @@ class WallSegment(Collider):
 
     def position(self):
         return self.wall_sprite.x,self.wall_sprite.y
+
+    @classmethod
+    def createwall(cls):
+        pass
